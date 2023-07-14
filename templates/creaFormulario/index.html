@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Formularios de Invención{% endblock %}
+
+{% block content %}
+<h1>Formulario de Invenciones</h1>
+    {% for formu in formulario %}
+        {{ formu.nombre }}
+    {% endfor %}
+    {% include "pagination.html" with page=formulario %}
+{% endblock %}

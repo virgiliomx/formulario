@@ -17,9 +17,7 @@
     <div class="main-container">
         {% block content %}{% endblock %}
     </div>
-    <a href="#">Inicio</a> - 
-    <a href="#">Índice de Inventores</a> - 
-    <a href="#">Índice de Expedientes</a> - 
+    <a href="{% url "index" %}">Inicio</a> - 
 </body>
 <script language="JavaScript" type="text/javascript" src="{% static 'js/main.js'%}"></script>
 </html>
