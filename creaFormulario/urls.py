@@ -5,4 +5,6 @@ app_name = 'creaFormulario'
 urlpatterns = [
     path('', views.formulario_list, name='listaFormulario'),
     path('carga/', views.cargaExcel, name='cargaExcel'),
+    path('<int:formulario_id>/creaFormulario/',
+         views.generaFormulario, name='generaFormulario'),
 ]

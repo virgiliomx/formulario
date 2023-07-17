@@ -6,12 +6,13 @@ class Formulario(models.Model):
     email_institucional = models.EmailField(null=True, )
     titulo = models.CharField(null=True, max_length=500)
     nombre = models.CharField(null=True, max_length=200)
+    dependencia = models.CharField(null=True, max_length=100)
     email = models.EmailField(null=True, )
     telefono = models.CharField(null=True, max_length=50)
     contacto = models.CharField(null=True, max_length=200)
     email_adicional = models.EmailField(null=True, )
     divulgacion = models.BooleanField(null=False, default=False)
-    divulgacion_info = models.CharField(max_length=200)
+    divulgacion_info = models.CharField(null=True, max_length=200)
     divulgacion_fecha_1 = models.DateField(
         null=True, default=django.utils.timezone.now)
     divulgacion_fecha_2 = models.DateField(
