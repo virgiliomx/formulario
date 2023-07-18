@@ -1,22 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block title %}Formularios de Invención{% endblock %}
 
 {% block content %}
-<h1>Formulario de Invenciones</h1>
+<h1 class="text-light">Formulario de Invenciones</h1>
     {% for formu in formulario %}
-    <div>
-        <p>{{ formu.nombre }} - {{ formu.titulo }}<br>
-            {% if formu.divulgacion %}
-                Existe Divulgación
-            {% else %}
-                No existe divulgación
-            {% endif %} </p>
-            <a href="{% url "creaFormulario:generaFormulario" formu.id %}">Genera Formulario</a>
-        {% if not forloop.last %}
-            <hr>
-        {% endif %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <p>{{ formu.nombre }} - {{ formu.titulo }}<br>
+                {% if formu.divulgacion %}
+                    Existe Divulgación
+                {% else %}
+                    No existe divulgación
+                {% endif %} </p>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-info" href="{% url "creaFormulario:generaFormulario" formu.id %}">Genera Formulario</a>
+        </div>
     </div>
     {% endfor %}
     {% include "pagination.html" with page=formulario %}

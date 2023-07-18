@@ -47,7 +47,7 @@ class Formulario(models.Model):
     contacto_especifique = models.CharField(null=True, max_length=500)
 
     class Meta:
-        ordering = ['nombre', 'titulo']
+        ordering = ['-id', 'nombre', 'titulo']
 
     def __str__(self):
         return f'Formulario de invención del inventor {self.nombre} titulado {self.titulo}.'
