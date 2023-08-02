@@ -4,7 +4,7 @@
 {% block title %}Carga Excel{% endblock %}
 
 {% block content %}
-<h2 class="text-light">Selecciona el archivo de Excel a cargar:</h2>
+<h2 class="">Selecciona el archivo de Excel a cargar:</h2>
     <form action="{% url "creaFormulario:cargaExcel" %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file"

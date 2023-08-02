@@ -45,6 +45,7 @@ class Formulario(models.Model):
     compromiso = models.BooleanField(null=True, default=True)
     contacto_empresa = models.BooleanField(null=True, default=False)
     contacto_especifique = models.CharField(null=True, max_length=500)
+    ingresado = models.BooleanField(null=True, default=False)
 
     class Meta:
         ordering = ['-id', 'nombre', 'titulo']

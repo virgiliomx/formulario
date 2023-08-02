@@ -1,9 +1,8 @@
-from io import StringIO
 import os
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.templatetags.static import static
+from django.urls import reverse
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
@@ -15,7 +14,6 @@ from .models import Formulario
 
 def formulario_list(request):
     formularios = Formulario.objects.all()
-    print(formularios.count())
 
     paginator = Paginator(formularios, 10)
     page_number = request.GET.get('page', 1)
@@ -51,9 +49,6 @@ def cargaExcel(request):
         wb = openpyxl.load_workbook(excel_file)
 
         hoja = wb.active
-        # print(hoja)
-
-        # reading a cell
 
         excel_data = []
         for i in range(2, hoja.max_row+1):
@@ -119,8 +114,8 @@ def cargaExcel(request):
                                     informacion_tecnica=hoja.cell(i, 42).value,
                                     compromiso=compromiso_e)
             excel_data.append(formulario)
-            print(formulario.divulgacion_fecha_1)
             formulario.save()
+            return redirect(reverse('creaFormulario:listaFormulario'))
     return render(request, 'creaFormulario/cargaExcel.html', {"excel_data": excel_data})
 
 
@@ -171,7 +166,7 @@ def generaFormulario(request, formulario_id):
         f'Título del proyecto: {formulario.titulo}')
     run_titulo.add_break()
     run_nombre = p_titulo.add_run(
-        f'Nombre: {formulario.nombre}, Tel: {formulario.telefono}, Correo: {formulario.email},')
+        f'Nombre: {formulario.nombre}, Dependencia: {formulario.dependencia} Tel: {formulario.telefono}, Correo: {formulario.email}')
     run_titulo.bold = True
     p_titulo.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
@@ -394,3 +389,16 @@ def generaFormulario(request, formulario_id):
     response['Content-Disposition'] = 'attachment; filename=' + docx_title
     document.save(response)
     return response
+
+
+def deleteFormulario(request, formulario_id):
+    formulario = get_object_or_404(Formulario, pk=formulario_id)
+    formulario.delete()
+    return HttpResponseRedirect(reverse('creaFormulario:listaFormulario'))
+
+
+def ingresaFormulario(request, formulario_id):
+    formulario = get_object_or_404(Formulario, pk=formulario_id)
+    formulario.ingresado = True
+    formulario.save()
+    return HttpResponseRedirect(reverse('creaFormulario:listaFormulario'))

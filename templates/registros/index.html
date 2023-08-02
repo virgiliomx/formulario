@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Historial PI{% endblock %}
+
+{% block content %}
+<h1 class="">Historial PI</h1>
+    {% for registro in registros %}
+        <div class="card border-primary mb-2">
+            <div class="card-body">
+                <p>
+                    {{ registro.figura }} - {{ registro.folio }}<br> {{ registro.titulo}}
+                </p>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-sm btn-outline-info" href="{% url "registros:detalleRegistro" registro.slug %}">Ver Registro</a>
+                <a class="btn btn-sm btn-outline-danger" href="#">Borrar Registro</a>
+            </div>
+        </div>
+    {% endfor %}
+    {% include "pagination.html" with page=registros %}
+{% endblock %}

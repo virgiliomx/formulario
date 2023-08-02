@@ -6,5 +6,4 @@ from .models import Formulario
 class FormularioInfo(admin.ModelAdmin):
     list_display = ('nombre', 'titulo', 'divulgacion')
 
-
 admin.site.register(Formulario, FormularioInfo)
