@@ -1,11 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.templatetags.static import static
+# from django.templatetags.static import static
 from django.urls import reverse
-from docx import Document
-import openpyxl
 from .models import Registro, Requisito, Titulo
+from .forms import RegistroForm, RequisitoForm
 
 
 def listaRegistros(request):
@@ -22,9 +21,46 @@ def listaRegistros(request):
 
 
 def nuevoRegistro(request):
-    pass
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            registro = form.save(commit=False)
+            if '/a/' in registro.folio:
+                registro.figura = 'Patente'
+            elif '/u/' in registro.folio:
+                registro.figura = 'Modelo de Utilidad'
+            elif '/f/' in registro.folio:
+                registro.figura = 'Diseño Industrial'
+            registro.save()
+            return redirect("registros:listaRegistros")
+    else:
+        form = RegistroForm()
+    return render(request, 'registros/nuevo.html', {'form': form})
+
+
+def nuevoRequisito(request, slug):
+    registro = get_object_or_404(Registro, slug=slug)
+    if request.method == 'POST':
+        form = RequisitoForm(request.POST)
+        if form.is_valid():
+            requisito = form.save(commit=False)
+            requisito.registro = registro
+            print(form)
+            requisito.save()
+            return redirect("registros:detalleRegistro",  registro.slug)
+    else:
+        form = RequisitoForm()
+
+    return render(request, 'registros/requisito.html', {'registro': registro, 'form': form})
 
 
 def detalleRegistro(request, slug):
     registro = get_object_or_404(Registro, slug=slug)
-    return render(request, 'registros/detalle.html', {'registro': registro})
+    requisitos = Requisito.objects.filter(registro=registro)
+    return render(request, 'registros/detalle.html', {'registro': registro, 'requisitos': requisitos})
+
+
+def borraRegistro(request, slug):
+    registro = get_object_or_404(Registro, slug=slug)
+    registro.delete()
+    return HttpResponseRedirect(reverse('registros:listaRegistros'))

@@ -1,6 +1,6 @@
 import os
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from docx import Document
@@ -115,7 +115,7 @@ def cargaExcel(request):
                                     compromiso=compromiso_e)
             excel_data.append(formulario)
             formulario.save()
-            return redirect(reverse('creaFormulario:listaFormulario'))
+        return redirect(reverse('creaFormulario:listaFormulario'))
     return render(request, 'creaFormulario/cargaExcel.html', {"excel_data": excel_data})
 
 

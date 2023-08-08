@@ -2,16 +2,16 @@
 {% load static %}
 
 
-{% block title %}Formularios de Invención{% endblock %}
+{% block title %}Formularios de Declaración de Invención{% endblock %}
 
 {% block content %}
-<h1 class="">Formulario de Invenciones</h1>
+<h1 class="">Formularios de Declaración de Invenciones</h1>
     {% for formu in formulario %}
         {% if not formu.ingresado %}
             <div class="card border-primary mb-2">
                 <div class="card-body">
                     <p>
-                        {{ formu.nombre }} - {{ formu.titulo }}<br>
+                        {{ formu.nombre }} - <strong>{{ formu.titulo }}</strong><br>
                         {% if formu.divulgacion %}
                             Existe divulgación<br>
                             {{ formu.divulgacion_fecha_1 }}

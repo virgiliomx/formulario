@@ -5,6 +5,68 @@
 {% block title %}Detalle Rexistro{% endblock %}
 
 {% block content %}
-    <h1 class="">{{registro.folio}}</h1>
-    {{registro.titulo}}
+<div class="card">
+    <div class="card-header">
+        <div class="row lead">
+            <div class="col-3">
+                {{registro.folio}}
+            </div>
+            <div class="col-7">
+                {{registro.titulo}}
+            </div>
+            <div class="col-2">
+                {{registro.figura}}
+            </div>
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="row">
+            <div class="col-2 text-end lead">Apoderado:</div>
+            <div class="col-2 lead">{{registro.apoderado}}</div>
+            <div class="col-1 text-end lead">RGP:</div>
+            <div class="col-2 lead">{{registro.rgp}}</div>
+            <div class="col-2 text-end lead">Solicitante:</div>
+            <div class="col-3 lead">{{registro.solicitante}}</div>
+            {% if registro.forma %}
+                Examen de forma {{registro.forma}}
+                <div class="row">
+                    <div class="col-2">
+                        Oficio IMPI-{{registro.forma_folio}}
+                    </div>
+                    <div class="col-2">
+                        Notificado el {{registro.forma_fecha}}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row text-center">
+                {% for requisito in requisitos %}
+                    <div class="col-2">
+                        {{requisito.tipo}} </br>
+                        Oficio IMPI-{{requisito.folio}}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5 class="text-center lead">
+                        {{registro.get_resolucion_display}}
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        
+        <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">1er. Requisito del Examen de Forma</a>
+        <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">2do. Requisito del Examen de Forma</a>
+        <a href="#" class="btn btn-sm btn-primary mb-1">Examen de Forma Favorable</a>
+        <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">1er. Requisito del Examen de Fondo</a>
+        <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">2do. Requisito del Examen de Fondo</a>
+        <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">3er. Requisito del Examen de Fondo</a>
+        <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">4to. Requisito del Examen de Fondo</a>
+        <a href="#" class="btn btn-sm btn-success mb-1">Resolución</a>
+        
+
+    </div>
+</div>
 {% endblock %}
