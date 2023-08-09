@@ -4,18 +4,8 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
-# Create your models here.
-
 
 class Registro(models.Model):
-
-    class Estatus(models.TextChoices):
-        TRAMITE = 'T', 'EN TRÁMITE'
-        ABANDONADA = 'A', 'ABANDONADA'
-        DESISTIDA = 'D', 'DESISTIDA'
-        NEGADA = 'N', 'NEGADA'
-        OTORGADA = 'O', 'OTORGADA'
-
     folio_regex = r'^(MX\/[afu]\/[0-9]{4}\/[0-9]{6})$'
     folio_validator = RegexValidator(
         regex=folio_regex, message='Formato del folio no válido', code='invalid_folio')
@@ -31,10 +21,6 @@ class Registro(models.Model):
     rgp = models.CharField(max_length=20, default='DDAJ-000163/2023')
     figura = models.CharField(max_length=15, default='Patente')
     added = models.DateTimeField(default=timezone.now)
-    resolucion = models.CharField(
-        max_length=1, choices=Estatus.choices, default=Estatus.TRAMITE)
-    resolucion_folio = models.IntegerField(blank=True, null=True)
-    resolucion_fecha = models.DateField(blank=True, null=True)
 
     class Meta:
         ordering = ['-folio', '-fecha_presentacion', '-added']
@@ -71,6 +57,23 @@ class Requisito(models.Model):
 
     def __str__(self):
         return f'{self.tipo} con número de folio {self.folio} recibido en fecha {self.fecha} del expediente {self.registro}.'
+
+
+class Resolucion(models.Model):
+
+    class Estatus(models.TextChoices):
+        TRAMITE = 'T', 'EN TRÁMITE'
+        ABANDONADA = 'A', 'ABANDONADA'
+        DESISTIDA = 'D', 'DESISTIDA'
+        NEGADA = 'N', 'NEGADA'
+        OTORGADA = 'O', 'OTORGADA'
+
+    resolucion = models.CharField(
+        max_length=1, choices=Estatus.choices, default=Estatus.TRAMITE)
+    folio = models.IntegerField(blank=True, null=True)
+    fecha = models.DateField(blank=True, null=True)
+    registro = models.ForeignKey(
+        Registro, on_delete=models.CASCADE, related_name='resolucion')
 
 
 class Contestacion(models.Model):

@@ -3,8 +3,8 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.templatetags.static import static
 from django.urls import reverse
-from .models import Registro, Requisito, Titulo
-from .forms import RegistroForm, RequisitoForm
+from .models import Registro, Requisito, Titulo, Resolucion
+from .forms import RegistroForm, RequisitoForm, ContestacionForm
 
 
 def listaRegistros(request):
@@ -55,12 +55,33 @@ def nuevoRequisito(request, slug):
 
 
 def detalleRegistro(request, slug):
+    forma = False
     registro = get_object_or_404(Registro, slug=slug)
+    resolucion = Resolucion.objects.filter(registro=registro)
     requisitos = Requisito.objects.filter(registro=registro)
-    return render(request, 'registros/detalle.html', {'registro': registro, 'requisitos': requisitos})
+    ultimo_requisito = requisitos.last()
+    for requisito in requisitos:
+        if requisito.tipo == "FORMAS":
+            forma = True
+    return render(request, 'registros/detalle.html', {'registro': registro, 'requisitos': requisitos, 'resolucion': resolucion, 'forma': forma, 'ultimo': ultimo_requisito})
 
 
 def borraRegistro(request, slug):
     registro = get_object_or_404(Registro, slug=slug)
     registro.delete()
     return HttpResponseRedirect(reverse('registros:listaRegistros'))
+
+
+def nuevaContestacion(request, slug, requisito_id):
+    registro = get_object_or_404(Registro, slug=slug)
+    requisito = get_object_or_404(Requisito, requisito_id=requisito_id)
+    if request.method == 'POST':
+        form = ContestacionForm(request.POST)
+        if form.is_valid():
+            contestacion = form.save(commit=False)
+            contestacion.requisito = requisito
+            contestacion.save()
+            return redirect('registros:detalleRegistro', registro.slug)
+    else:
+        form = ContestacionForm()
+    return render(request, 'registros/contestacion.html', {'registro': registro, 'form': form, 'requisito': requisito})
