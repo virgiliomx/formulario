@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.templatetags.static import static
 from django.urls import reverse
 from .models import Registro, Requisito, Titulo, Resolucion
-from .forms import RegistroForm, RequisitoForm, ContestacionForm
+from .forms import RegistroForm, RequisitoForm, ContestacionForm, ResolucionForm, TituloForm
 
 
 def listaRegistros(request):
@@ -45,13 +45,27 @@ def nuevoRequisito(request, slug):
         if form.is_valid():
             requisito = form.save(commit=False)
             requisito.registro = registro
-            print(form)
             requisito.save()
             return redirect("registros:detalleRegistro",  registro.slug)
     else:
         form = RequisitoForm()
 
     return render(request, 'registros/requisito.html', {'registro': registro, 'form': form})
+
+
+def nuevaResolucion(request, slug):
+    registro = get_object_or_404(Registro, slug=slug)
+    if request.method == 'POST':
+        form = ResolucionForm(request.POST)
+        if form.is_valid():
+            resolucion = form.save(commit=False)
+            resolucion.registro = registro
+            resolucion.save()
+            return redirect("registros:detalleRegistro",  registro.slug)
+    else:
+        form = ResolucionForm()
+
+    return render(request, 'registros/resolucion.html', {'registro': registro, 'form': form})
 
 
 def detalleRegistro(request, slug):
@@ -72,9 +86,12 @@ def borraRegistro(request, slug):
     return HttpResponseRedirect(reverse('registros:listaRegistros'))
 
 
-def nuevaContestacion(request, slug, requisito_id):
-    registro = get_object_or_404(Registro, slug=slug)
-    requisito = get_object_or_404(Requisito, requisito_id=requisito_id)
+def nuevaContestacion(request, requisito_id):
+    # requisito = Requisito.objects.filter(registro=registro, pk=id)
+    requisito = get_object_or_404(Requisito, pk=requisito_id)
+    registro = get_object_or_404(Registro, requisito=requisito)
+    # Registro.objects.filter(requisito=requisito)
+    print(registro.slug)
     if request.method == 'POST':
         form = ContestacionForm(request.POST)
         if form.is_valid():

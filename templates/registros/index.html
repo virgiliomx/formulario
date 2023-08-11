@@ -10,15 +10,38 @@
         <a class="btn btn-sm btn-primary mb-2" href="{% url 'registros:nuevoRegistro' %}">Nuevo</a>
     </div>
     {% for registro in registros %}
-        <div class="card border-primary mb-2">
+        <div class="card mb-2">
+            {% if registro.resolucion.first.resolucion == 'O' %}
+                <div class="card-header bg-success lead">
+            {% elif registro.resolucion.first.resolucion == 'A'%}
+                <div class="card-header bg-warning lead">
+            {% elif registro.resolucion.first.resolucion == 'D' %}
+                <div class="card-header bg-warning lead">
+            {% elif registro.resolucion.first.resolucion == 'N' %}
+                <div class="card-header bg-danger lead">
+            {% else %}
+                <div class="card-header bg-secondary lead">
+            {% endif %}
+                {{ registro.figura }} - {{ registro.folio }}
+                
+                    
+            </div>
             <div class="card-body">
-                <p>
-                    {{ registro.figura }} - {{ registro.folio }}<br> {{ registro.titulo}}
-                </p>
+                <p class=" lead text-center">{{ registro.titulo}}</p>
+                <div class="card">
+                    <div class="card-body">
+                        {% for requisito in registro.requisito.all %}
+                        <div class="row">
+                            {{requisito.get_tipo_display}}
+                            Oficio IMPI {{requisito.folio}} recibido el {{requisito.fecha}}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
-                <a class="btn btn-sm btn-outline-info" href="{% url "registros:detalleRegistro" registro.slug %}">Ver Registro</a>
-                <a class="btn btn-sm btn-outline-danger" href="{% url "registros:borraRegistro" registro.slug %}">Borrar Registro</a>
+                <a class="btn btn-sm btn-info" href="{% url "registros:detalleRegistro" registro.slug %}">Ver Registro</a>
+                <a class="btn btn-sm btn-danger" href="{% url "registros:borraRegistro" registro.slug %}">Borrar Registro</a>
             </div>
         </div>
     {% endfor %}

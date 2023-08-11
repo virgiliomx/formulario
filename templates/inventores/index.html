@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Nuevo Requisito{% endblock %}
+
+{% block content %}
+    <h1>Listado de Inventores</h1>
+
+    {% for inventor in inventores %}
+        {{inventor.nombre}}
+    {% endfor %}
+   
+    
+{% endblock %}

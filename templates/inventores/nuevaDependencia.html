@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Nueva Dependencia{% endblock %}
+
+{% block content %}
+    <h1>Requisito</h1>
+
+    <form role="form" id="DependenciaForm" action="{% url 'inventores:nuevaDependencia' registro.slug %}" method="POST">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            {{form.errors}}
+            {{form.help_text}}
+            {{field}}
+        {% endfor %}
+        <button class="btn btn-sm btn-success" type="submit" name="submit">Aceptar</button>
+    </form>
+    
+{% endblock %}

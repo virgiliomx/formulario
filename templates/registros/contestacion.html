@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Nueva Contestacion{% endblock %}
+
+{% block content %}
+    <h1>Contestacion</h1>
+
+    <form role="form" id="ContestacionForm" action="{% url 'registros:nuevaContestacion' requisito.id %}" method="POST">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            {{form.errors}}
+            {{form.help_text}}
+            {{field}}
+        {% endfor %}
+        <button class="btn btn-sm btn-success" type="submit" name="submit">Aceptar</button>
+    </form>
+    
+{% endblock %}

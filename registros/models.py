@@ -43,10 +43,10 @@ class Requisito(models.Model):
         FORMA1 = 'FORMA1', '1er. Requisito del Examen de Forma'
         FORMA2 = 'FORMA2', '2do. Requisito del Examen de Forma'
         FORMAS = 'FORMAS', 'SATISFECHO'
-        FONDO1 = 'FONDO1', '1er. Requisito del Examen de Forma'
-        FONDO2 = 'FONDO2', '2do. Requisito del Examen de Forma'
-        FONDO3 = 'FONDO3', '3er. Requisito del Examen de Forma'
-        FONDO4 = 'FONDO4', '4to. Requisito del Examen de Forma'
+        FONDO1 = 'FONDO1', '1er. Requisito del Examen de Fondo'
+        FONDO2 = 'FONDO2', '2do. Requisito del Examen de Fondo'
+        FONDO3 = 'FONDO3', '3er. Requisito del Examen de Fondo'
+        FONDO4 = 'FONDO4', '4to. Requisito del Examen de Fondo'
 
     tipo = models.CharField(
         max_length=34, choices=TiposRequisitos.choices, default=TiposRequisitos.FORMA1)

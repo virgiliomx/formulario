@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Nueva Resolucion{% endblock %}
+
+{% block content %}
+    <h1>Resolucion</h1>
+
+    <form role="form" id="ResolucionForm" action="{% url 'registros:nuevaResolucion' registro.slug %}" method="POST">
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+            {{form.errors}}
+            {{form.help_text}}
+            {{field}}
+        {% endfor %}
+        <button class="btn btn-sm btn-success" type="submit" name="submit">Aceptar</button>
+    </form>
+    
+{% endblock %}

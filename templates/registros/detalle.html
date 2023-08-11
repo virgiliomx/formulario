@@ -21,41 +21,65 @@
     </div>
     <div class="card-content">
         <div class="row">
-            <div class="col-2 text-end lead">Apoderado:</div>
-            <div class="col-2 lead">{{registro.apoderado}}</div>
-            <div class="col-1 text-end lead">RGP:</div>
-            <div class="col-2 lead">{{registro.rgp}}</div>
-            <div class="col-2 text-end lead">Solicitante:</div>
-            <div class="col-3 lead">{{registro.solicitante}}</div>
-            <div class="row text-center">
+            <div class="col-2 text-end">Apoderado:</div>
+            <div class="col-2">{{registro.apoderado}}</div>
+            <div class="col-1 text-end">RGP:</div>
+            <div class="col-2">{{registro.rgp}}</div>
+            <div class="col-2 text-end">Solicitante:</div>
+            <div class="col-3">{{registro.solicitante}}</div>
+            <div class="row">
                 {% for requisito in requisitos %}
-                    <div class="row">
-                        <div class="col-2">
-                            {{requisito.get_tipo_display}} </br>
-                            Oficio IMPI-{{requisito.folio}}
-                        </div>
-                        <div class="col-2">
-                            Notificado el {{requisito.fecha}}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                {{requisito.get_tipo_display}} </br>
+                                Oficio IMPI-{{requisito.folio}}</br>
+                                Notificado el {{requisito.fecha}}
+                            </div>
+                            {% if requisito.tipo != "FORMAS" %}
+                                <div class="card-footer">
+                                    {% if not requisito.contestacion.all %}
+                                        <div class="">
+                                            <a href="{% url "registros:nuevaContestacion" requisito.id %}" class="btn btn-sm btn-primary">Capturar Contestación</a>
+                                        </div>
+                                    {% else %}
+                                        <div>
+                                            Contestado el {{requisito.contestacion.first.fecha}}</br>
+                                            {{requisito.contestacion.first.folio}}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col">
-                    <h5 class="text-center lead">
-                        {% if resolucion %}
-                            {{resolucion.get_resolucion_display}}
-                        {% endif %}
-                    </h5>
+                        
                 </div>
             </div>
         </div>
     </div>
-    <div class="card-footer">
+    {% if registro.resolucion.first.resolucion == 'O' %}
+        <div class="card-footer bg-success text-center">
+    {% elif registro.resolucion.first.resolucion == 'A' %}
+        <div class="card-footer bg-waring text-center">
+    {% elif registro.resolucion.first.resolucion == 'D' %}
+        <div class="card-footer bg-waring text-center">
+    {% elif registro.resolucion.first.resolucion == 'N' %}
+        <div class="card-footer bg-danger text-center">
+    {% else %}
+        <div class="card-footer">
+    {% endif %}
         {% if not resolucion %}
-            {% comment %} <a href="{% url "registros:nuevoRequisito" registro.slug ultimo.tipo %}" class="btn btn-sm btn-info mb-1">Nuevo Requisito</a> {% endcomment %}
             <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">Nuevo Requisito</a>
-            <a href="#" class="btn btn-sm btn-success mb-1">Resolución</a>
+            <a href="{% url "registros:nuevaResolucion" registro.slug %}" class="btn btn-sm btn-success mb-1">Resolución</a>
+        {% else %}
+            {% if registro.resolucion.all %} 
+                <p class='lead'>{{registro.resolucion.first.get_resolucion_display}}</p>
+                Oficio IMPI {{registro.resolucion.first.folio}} Notificado el {{registro.resolucion.first.fecha}}
+            {% endif %}
         {% endif %}
         {% if not forma %}
             <a href="{% url "registros:nuevoRequisito" registro.slug %}" class="btn btn-sm btn-info mb-1">Favorable de Forma</a>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registro, Requisito, Titulo, Contestacion
+from .models import Registro, Requisito, Titulo, Contestacion, Resolucion
 
 
 class RegistroForm(forms.ModelForm):
@@ -13,6 +13,12 @@ class RequisitoForm(forms.ModelForm):
     class Meta:
         model = Requisito
         fields = ['tipo', 'folio', 'fecha']
+
+
+class ResolucionForm(forms.ModelForm):
+    class Meta:
+        model = Resolucion
+        fields = ['resolucion', 'folio', 'fecha']
 
     """def __init__(self, requisito, *args, **kwargs):
         super(RequisitoForm, self).__init__(*args, **kwargs)
