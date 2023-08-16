@@ -7,7 +7,7 @@
 {% block content %}
     <h1>Requisito</h1>
 
-    <form role="form" id="DependenciaForm" action="{% url 'inventores:nuevaDependencia' registro.slug %}" method="POST">
+    <form role="form" id="DependenciaForm" action="{% url 'inventores:nuevaDependencia' %}" method="POST">
         {% csrf_token %}
         {% for field in form.visible_fields %}
             {{form.errors}}

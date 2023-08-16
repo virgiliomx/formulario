@@ -3,8 +3,9 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.templatetags.static import static
 from django.urls import reverse
-from .models import Registro, Requisito, Titulo, Resolucion
-from .forms import RegistroForm, RequisitoForm, ContestacionForm, ResolucionForm, TituloForm
+from .models import Registro, Requisito, Titulo
+from .forms import RegistroForm, RequisitoForm, ContestacionForm, TituloForm
+from inventores.views import Inventor
 
 
 def listaRegistros(request):
@@ -38,46 +39,31 @@ def nuevoRegistro(request):
     return render(request, 'registros/nuevo.html', {'form': form})
 
 
-def nuevoRequisito(request, slug):
+def nuevoRequisito(request, slug, ultimo):
     registro = get_object_or_404(Registro, slug=slug)
     if request.method == 'POST':
-        form = RequisitoForm(request.POST)
+        form = RequisitoForm(request.POST, ultimo=ultimo)
         if form.is_valid():
             requisito = form.save(commit=False)
             requisito.registro = registro
             requisito.save()
             return redirect("registros:detalleRegistro",  registro.slug)
     else:
-        form = RequisitoForm()
+        form = RequisitoForm(ultimo=ultimo)
 
     return render(request, 'registros/requisito.html', {'registro': registro, 'form': form})
-
-
-def nuevaResolucion(request, slug):
-    registro = get_object_or_404(Registro, slug=slug)
-    if request.method == 'POST':
-        form = ResolucionForm(request.POST)
-        if form.is_valid():
-            resolucion = form.save(commit=False)
-            resolucion.registro = registro
-            resolucion.save()
-            return redirect("registros:detalleRegistro",  registro.slug)
-    else:
-        form = ResolucionForm()
-
-    return render(request, 'registros/resolucion.html', {'registro': registro, 'form': form})
 
 
 def detalleRegistro(request, slug):
     forma = False
     registro = get_object_or_404(Registro, slug=slug)
-    resolucion = Resolucion.objects.filter(registro=registro)
     requisitos = Requisito.objects.filter(registro=registro)
-    ultimo_requisito = requisitos.last()
+    ultimo = requisitos.last()
+    inventores = Inventor.objects.filter(registros=registro)
     for requisito in requisitos:
         if requisito.tipo == "FORMAS":
             forma = True
-    return render(request, 'registros/detalle.html', {'registro': registro, 'requisitos': requisitos, 'resolucion': resolucion, 'forma': forma, 'ultimo': ultimo_requisito})
+    return render(request, 'registros/detalle.html', {'registro': registro, 'requisitos': requisitos, 'forma': forma, 'ultimo': ultimo, 'inventores': inventores})
 
 
 def borraRegistro(request, slug):
@@ -87,10 +73,8 @@ def borraRegistro(request, slug):
 
 
 def nuevaContestacion(request, requisito_id):
-    # requisito = Requisito.objects.filter(registro=registro, pk=id)
     requisito = get_object_or_404(Requisito, pk=requisito_id)
     registro = get_object_or_404(Registro, requisito=requisito)
-    # Registro.objects.filter(requisito=requisito)
     print(registro.slug)
     if request.method == 'POST':
         form = ContestacionForm(request.POST)
@@ -102,3 +86,17 @@ def nuevaContestacion(request, requisito_id):
     else:
         form = ContestacionForm()
     return render(request, 'registros/contestacion.html', {'registro': registro, 'form': form, 'requisito': requisito})
+
+
+def nuevoTitulo(request, slug):
+    registro = get_object_or_404(Registro, slug=slug)
+    if request.method == 'POST':
+        form = TituloForm(request.POST)
+        if form.is_valid():
+            titulo = form.save(commit=False)
+            titulo.registro = registro
+            titulo.save()
+            return redirect('registros:detalleRegistro', registro.slug)
+    else:
+        form = TituloForm()
+    return render(request, 'registros/titulo.html', {'registro': registro, 'form': form})

@@ -27,7 +27,7 @@ class Registro(models.Model):
         indexes = [models.Index(fields=['figura'])]
 
     def __str__(self):
-        return f'{self.figura} titulada {self.titulo} con número de expediente {self.folio}'
+        return f'{self.folio}'
 
     def get_absolute_url(self):
         return reverse('datalleRegistro', kwargs={'slug': self.slug})
@@ -47,6 +47,10 @@ class Requisito(models.Model):
         FONDO2 = 'FONDO2', '2do. Requisito del Examen de Fondo'
         FONDO3 = 'FONDO3', '3er. Requisito del Examen de Fondo'
         FONDO4 = 'FONDO4', '4to. Requisito del Examen de Fondo'
+        OTORGADA = 'OTORGADA', 'OTORGADA'
+        DESISTIDA = 'DESISTIDA', 'DESISTIDA'
+        NEGADA = 'NEGADA', 'NEGADA'
+        ABANDONADA = 'ABANDONADA', 'ABANDONADA'
 
     tipo = models.CharField(
         max_length=34, choices=TiposRequisitos.choices, default=TiposRequisitos.FORMA1)
@@ -57,23 +61,6 @@ class Requisito(models.Model):
 
     def __str__(self):
         return f'{self.tipo} con número de folio {self.folio} recibido en fecha {self.fecha} del expediente {self.registro}.'
-
-
-class Resolucion(models.Model):
-
-    class Estatus(models.TextChoices):
-        TRAMITE = 'T', 'EN TRÁMITE'
-        ABANDONADA = 'A', 'ABANDONADA'
-        DESISTIDA = 'D', 'DESISTIDA'
-        NEGADA = 'N', 'NEGADA'
-        OTORGADA = 'O', 'OTORGADA'
-
-    resolucion = models.CharField(
-        max_length=1, choices=Estatus.choices, default=Estatus.TRAMITE)
-    folio = models.IntegerField(blank=True, null=True)
-    fecha = models.DateField(blank=True, null=True)
-    registro = models.ForeignKey(
-        Registro, on_delete=models.CASCADE, related_name='resolucion')
 
 
 class Contestacion(models.Model):

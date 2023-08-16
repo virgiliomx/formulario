@@ -2,8 +2,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
+
+import openpyxl
 from .models import Inventor, Correo, Telefono
-from .forms import DependenciasForm, InventorForm, CorreoForm, TelefonoForm
+from .forms import DependenciasForm, InventorForm, CorreoForm, TelefonoForm, ProyectoForm
 
 
 def nuevaDependencia(request):
@@ -14,6 +16,34 @@ def nuevaDependencia(request):
     else:
         form = DependenciasForm()
     return render(request, 'inventores/nuevaDependencia.html', {'form': form})
+
+
+def cargaExcel(request):
+
+    def dat(value):
+        if value == "":
+            return None
+        return value
+
+    if 'GET' == request.method:
+        return render(request, 'inventores/cargaExcel.html', {})
+    else:
+        excel_file = request.FILES['excel_file']
+
+        wb = openpyxl.load_workbook(excel_file)
+        hoja = wb.active
+        excel_data = []
+        for i in range(2, hoja.max_row+1):
+            nombre = dat(hoja.cell(i, 1).value)
+            tipo = dat(hoja.cell(i, 2).value)
+            numero = dat(hoja.cell(i, 3).value)
+            dependencia = dat(hoja.cell(i, 4).value)
+
+            inventor = Inventor(nombre=nombre, tipo=tipo,
+                                numero=numero, dependencia=dependencia)
+            inventor.save()
+        return redirect(reverse('inventores:listaInventores'))
+    return render(request, 'inventores/cargaExcel.html')
 
 
 def listaInventores(request):
@@ -33,7 +63,8 @@ def detalleInventor(request, slug):
     inventor = get_object_or_404(Inventor, slug=slug)
     correos = Correo.objects.filter(inventor=inventor)
     telefonos = Telefono.objects.filter(inventor=inventor)
-    return render(request, 'invneotres/detalleInventor.html', {'inventor': inventor, 'correos': correos, 'telefonos': telefonos})
+    registros = inventor.registros.all()
+    return render(request, 'inventores/detalleInventor.html', {'inventor': inventor, 'correos': correos, 'telefonos': telefonos, 'registros': registros})
 
 
 def nuevoInventor(request):
@@ -41,6 +72,7 @@ def nuevoInventor(request):
         form = InventorForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('inventores:listaInventores')
     else:
         form = InventorForm()
     return render(request, 'inventores/nuevo.html', {'form': form})
@@ -92,3 +124,15 @@ def borraTelefono(request, telefono_id, slug):
     inventor = get_object_or_404(Inventor, slug=slug)
     telefono.delete()
     return render(request, 'inventores/detalleInventor.html', {'inventor': inventor})
+
+
+def nuevoRegistro(request, slug):
+    inventor = get_object_or_404(Inventor, slug=slug)
+    if request.method == 'POST':
+        form = ProyectoForm(request.POST, instance=inventor)
+        if form.is_valid():
+            form.save()
+            return redirect('inventores:detalleInventor', inventor.slug)
+    else:
+        form = ProyectoForm()
+    return render(request, 'inventores/nuevoProyecto.html', {'form': form, 'inventor': inventor})

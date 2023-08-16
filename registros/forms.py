@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registro, Requisito, Titulo, Contestacion, Resolucion
+from .models import Registro, Requisito, Titulo, Contestacion
 
 
 class RegistroForm(forms.ModelForm):
@@ -14,13 +14,7 @@ class RequisitoForm(forms.ModelForm):
         model = Requisito
         fields = ['tipo', 'folio', 'fecha']
 
-
-class ResolucionForm(forms.ModelForm):
-    class Meta:
-        model = Resolucion
-        fields = ['resolucion', 'folio', 'fecha']
-
-    """def __init__(self, requisito, *args, **kwargs):
+    def __init__(self, requisito, *args, **kwargs):
         super(RequisitoForm, self).__init__(*args, **kwargs)
         if requisito is None:
             self.fields['tipo'].choices = Requisito.TiposRequisitos.FORMA1, Requisito.TiposRequisitos.FORMAS
@@ -35,7 +29,7 @@ class ResolucionForm(forms.ModelForm):
         if requisito == 'FONDO2':
             self.fields['tipo'].choices = Requisito.TiposRequisitos.FONDO3
         if requisito == 'FONDO3':
-            self.fields['tipo'].choices = Requisito.TiposRequisitos.FONDO4"""
+            self.fields['tipo'].choices = Requisito.TiposRequisitos.FONDO4
 
 
 class ContestacionForm(forms.ModelForm):

@@ -7,9 +7,44 @@
 {% block content %}
     <h1>Listado de Inventores</h1>
 
-    {% for inventor in inventores %}
-        {{inventor.nombre}}
-    {% endfor %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Dependencia</th>
+                <th scope="col">Correo(s)</th>
+                <th scope="col">Teléfono(s)</th>
+                <th scope="col">Empleado/Alumno</th>
+                <th scope="col">No. Empleado/Matrícula</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventor in inventores %}
+                <tr>
+                    <th scope="row">
+                        <a href="{% url "inventores:detalleInventor" inventor.slug %}">
+                            {{inventor.nombre}}</th>
+                        </a>
+                    <td>{{inventor.dependencia}}</td>
+                    <td>
+                    
+                        {% for correo in inventor.correo_set.all %}
+                            {{correo.correo}}{% if not forloop.last %}; {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for telefono in inventor.telefono_set.all %}
+                            {{telefono.telefono}}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{inventor.get_tipo_display}}</td>
+                    <td>{{inventor.numero}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+    
    
     
 {% endblock %}

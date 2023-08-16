@@ -7,7 +7,7 @@
 {% block content %}
     <h1>Nuevo Inventor</h1>
 
-    <form role="form" id="InventorForm" action="{% url 'registros:nuevoRequisito' %}" method="POST">
+    <form role="form" id="InventorForm" action="{% url 'inventores:nuevoInventor' %}" method="POST">
         {% csrf_token %}
         {% for field in form.visible_fields %}
             {{form.errors}}

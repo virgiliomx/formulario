@@ -5,7 +5,44 @@
 {% block title %}Nuevo Requisito{% endblock %}
 
 {% block content %}
-    <h1>{{inventor.nombre}}</h1>
+    <h4>Detalle del Inventor</h4>
+    <div class="card">
+        <div class="card-header">
+            {{inventor.nombre}}
+        </div>
+        <div class="card-body">
+            Dependencia: {{inventor.dependencia}}</br>
+            {{inventor.get_tipo_display}} {% if inventor.tipo == 'E' %} con número {% else %} con matrícula {% endif %}{{inventor.numero}}</br>
+            Correo(s): 
+            {% for correo in correos %}
+                {{correo.correo}}{% if not forloop.last %}; {% endif %}
+            {% endfor %}
+            <br>
+            Telefono(s): 
+            {% if telefonos %}
+                {% for telefono in telefonos %}
+                    {{telefono.telefono}}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% else %}
+                Sin teléfonos de contacto
+            {% endif %}
+            <br>
+            <br>
+            {% if registros %}
+                <h6>Registros en los que articipa:</h6>
+                {% for registro in registros %}
+                    {{ registro.folio }} - {{ registro.titulo }}
+                {% endfor %}
+            {% endif %}
+        </div>
+            
+        <div class="card-footer">
+            <a href="{% url "inventores:nuevoCorreo" inventor.slug %}" class="btn btn-sm btn-info">Agregar Correo</a>
+            <a href="{% url "inventores:nuevoTelefono" inventor.slug %}" class="btn btn-sm btn-info">Agregar Teléfono</a>
+            <a href="{% url "inventores:nuevoRegistro" inventor.slug %}" class="btn btn-sm btn-info">Agregar Registro</a>
+            <a href="{% url "inventores:borraInventor" inventor.slug %}" class="btn btn-sm btn-danger">Borrar Inventor</a>
+        </div>
+    </div>
 
     
     

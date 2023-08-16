@@ -2,12 +2,12 @@
 {% load static %}
 
 
-{% block title %}Nuevo Correo{% endblock %}
+{% block title %}Nuevo Título{% endblock %}
 
 {% block content %}
-    <h1>Correo</h1>
+    <h1>Título</h1>
 
-    <form role="form" id="CorreoForm" action="{% url 'inventores:nuevoCorreo' inventor.slug %}" method="POST">
+    <form role="form" id="TituloForm" action="{% url 'registros:nuevoTitulo' registro.slug %}" method="POST">
         {% csrf_token %}
         {% for field in form.visible_fields %}
             {{form.errors}}

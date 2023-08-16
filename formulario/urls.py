@@ -26,4 +26,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('formulario/', include('creaFormulario.urls')),
     path('registros/', include('registros.urls')),
+    path('inventores/', include('inventores.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

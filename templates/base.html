@@ -13,8 +13,8 @@
 
     <title>PI CIETT - {% block title %}NADA{% endblock %}</title>
 </head>
-<body class="bg-light">
-  <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+<body class="bg-dark">
+  <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">CIETT-PI</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,30 @@
               </li>
               {% url 'creaFormulario:cargaExcel' as url %}
               <li>
-                <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="{% url "creaFormulario:cargaExcel" %}">Cargar Nuevo</a>
+                <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="{% url "creaFormulario:cargaExcel" %}">Cargar Excel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Inventores
+            </a>
+            <ul class="dropdown-menu">
+              {% url 'inventores:nuevaDependencia' as url %}
+              <li>
+                <a class='dropdown-item {% if request.path == url %}active{% endif %}' aria-current="page" href="{% url "inventores:nuevaDependencia" %}">Dependencia</a>
+              </li>
+              {% url 'inventores:listaRegistros' as url %}
+              <li>
+                <a class='dropdown-item {% if request.path == url %}active{% endif %}' aria-current="page" href="{% url "inventores:listaInventores" %}">Listado</a>
+              </li>
+              {% url 'inventores:nuevoInventor' as url %}
+              <li>
+                <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="{% url "inventores:nuevoInventor" %}">Cargar Nuevo</a>
+              </li>
+              {% url 'inventores:cargaExcel' as url %}
+              <li>
+                <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="{% url "inventores:cargaExcel" %}">Cargar Excel</a>
               </li>
             </ul>
           </li>
@@ -50,9 +73,9 @@
               <li>
                 <a class='dropdown-item {% if request.path == url %}active{% endif %}' aria-current="page" href="{% url "registros:listaRegistros" %}">Listado</a>
               </li>
-              {% url 'registros:listaRegistros' as url %}
+              {% url 'registros:nuevoRegistro' as url %}
               <li>
-                <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="#">Cargar Nuevo</a>
+                <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="{% url 'registros:nuevoRegistro'%}">Cargar Nuevo</a>
               </li>
             </ul>
           </li>
